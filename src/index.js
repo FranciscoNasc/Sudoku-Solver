@@ -19,8 +19,7 @@ function SquarePredefined(props) {
 
 function Square(props) {
 
-    let cssClassesSelectors = "square " + props.border + props.color;
-    //console.log(cssClassesSelectors);
+    let cssClassesSelectors = "square " + props.border;// + props.color;
     return (
         <input 
         type="text"
@@ -49,36 +48,38 @@ class Board extends React.Component {
             col: colTemp,
             row: rowTemp,
             grid: gridTemp,
+            steps: [],
+            index:0,
+            interval: clearInterval,
         }
     }
 
     set(rw, cl, i ){
-        let gridtemp = this.state.grid.slice();
-        let rowtemp = this.state.row.slice();
-        let coltemp = this.state.col.slice();
-        let boardtemp = this.state.board.slice();
+        let gridtemp = this.state.grid;
+        let rowtemp = this.state.row;
+        let coltemp = this.state.col;
+        let boardtemp = this.state.board;
         boardtemp[rw * 9 + cl] = i;
-        //window.setTimeout(boardtemp[rw * 9 + cl] = i, 1000000000000000000);
-
         gridtemp[this.state.solver.belongsTo(rw * 9 + cl)][i] = true;
         rowtemp[rw][i] = true;
         coltemp[cl][i] = true;
-        this.setState({grid: gridtemp, row: rowtemp, col: coltemp, board: boardtemp});
-
-        //this.handleChange(rw*9 + cl, i);
-        //setTimeout( () => console.log(i), 100);
+        let stepsAux = this.state.steps;
+        stepsAux.push({"row":rw, "col": cl, "value": i});
+        this.setState({grid: gridtemp, row: rowtemp, col: coltemp, board: boardtemp, steps: stepsAux});
     }
 
     reset(rw, cl, i ){
-        let gridtemp = this.state.grid.slice();
-        let rowtemp = this.state.row.slice();
-        let coltemp = this.state.col.slice();
-        let boardtemp = this.state.board.slice();
+        let gridtemp = this.state.grid;
+        let rowtemp = this.state.row;
+        let coltemp = this.state.col;
+        let boardtemp = this.state.board;
         boardtemp[rw * 9 + cl] = "";
         gridtemp[this.state.solver.belongsTo(rw * 9 + cl)][i] = false;
         rowtemp[rw][i] = false;
         coltemp[cl][i] = false;
-        this.setState({grid: gridtemp, row: rowtemp, col: coltemp, board: boardtemp});
+        let stepsAux = this.state.steps;
+        stepsAux.push({"row":rw, "col": cl, "value": "" })
+        this.setState({grid: gridtemp, row: rowtemp, col: coltemp, board: boardtemp, steps: stepsAux});
     }
 
     solveRecursion(rw, cl){
@@ -97,13 +98,11 @@ class Board extends React.Component {
         }
 
         if(!this.state.mark[rw*9 + cl]){ // predefined cell
-            //console.log(rw*9 + cl);
             if(this.solveRecursion(rw, cl))
                 return true;
 
             return false;
         }
-
 
         for(let i = 1; i <= 9; i++){
             if(!this.state.row[rw][i] && !this.state.col[cl][i] && !this.state.grid[this.state.solver.belongsTo(rw * 9 + cl)][i]){
@@ -118,22 +117,48 @@ class Board extends React.Component {
         return false;
     }
 
+    sv(){
+        let ind = this.state.index;
+        if(ind == this.state.steps.length){
+            clearInterval(this.state.interval);
+            //this.setState({steps: [], index: 0});
+            return;
+        }
+
+        let boardtemp = this.state.board;
+        let x = this.state.steps[ind];
+        boardtemp[x.row*9 + x.col] = x.value;
+        this.setState({board: boardtemp, index: ind + 1});
+    }
+
     solveY(){
         console.log("abcde");
         if(this.solve(0, 0));
             console.log("foi");
+        let boardtemp = this.state.board;
+        for(let i = 0; i < 81; i++){
+            if(this.state.mark[i])
+                boardtemp[i] = "";
+        }
+        this.setState({board: boardtemp});
+
+        let ind = this.state.index;
+        ind = 0;
+        this.setState({index: ind});
+
+        this.state.interval = setInterval( () => {this.sv()}, 100);
+
+        console.log("consegui");
     }   
 
     borders(n){
         let str = "";
         if((n >= 19 && n <= 27) || (n >=46 && n <=54))
-            str += "bottom ";
+            str += " bottom ";
 
-        for(let i = 0; i < 9; i++){
-            if(n === 3 + 9*i || n === 6 + 9*i){
+        for(let i = 0; i < 9; i++)
+            if(n === 3 + 9*i || n === 6 + 9*i)
                 str += " right ";
-            }
-        }
         return str;
     }
 
@@ -143,7 +168,7 @@ class Board extends React.Component {
             var boardAux = this.state.board;
 
             if(boardAux[i] != "")
-                boardAux[i] = this.renderSquareGreen(boardAux[i]%10, i);
+                boardAux[i] = boardAux[i]%10;
             this.setState({board: boardAux});
 
         }
@@ -152,7 +177,6 @@ class Board extends React.Component {
             var boardAux = this.state.board;
             boardAux[i] = e%10;
             this.setState({ board : boardAux});
-            this.renderSquareGreen(e, i);
         }
     };
 
@@ -163,13 +187,8 @@ class Board extends React.Component {
             return this.renderSquare(this.state.board[i], i);
     }
 
-    renderSquareGreen(i, n) {
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        return <Square value = {i} onChange={(a, b) => this.handleChange(a, b)} index={n} color={" inserted"} border = {this.borders(n + 1)}  />;
-    }
-
     renderSquare(i, n) {
-        return <Square value = {i} onChange={(a, b) => this.handleChange(a, b)} index={n}  color={""} border = {this.borders(n + 1)}  />;
+        return <Square value = {i} onChange={(a, b) => this.handleChange(a, b)} index={n} border = {this.borders(n + 1)}  />;
     }
 
     renderSquarePredefined(i, n) {
@@ -190,7 +209,7 @@ class Board extends React.Component {
   
         //
 
-        return <div  className="board">{row}<button className="solveButton" onClick={() => setTimeout(() => this.solveY(), 1000)}></button></div>
+        return <div  className="board">{row}<button className="solveButton" onClick={() => this.solveY()}></button></div>
     }
 }
 

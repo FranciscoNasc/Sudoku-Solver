@@ -7,7 +7,7 @@
 .board{
     border-style: solid;
     border-width: 0px;
-    border-color: black;
+    /*border-color: black;*/
 }
 
 .board-row{
@@ -76,11 +76,12 @@ input[type=number] {
     align-items: center;
 }
 
-@media only screen and (max-width: 359px){
+/* @media only screen and (max-width: 359px){
    .square{
         width: 11.1%; 
     }
-}
+} */
+
 @media only screen and (min-width: 431px) and (max-width: 960px){
     .square{
         width: 10vw; 
@@ -89,7 +90,8 @@ input[type=number] {
 }
 
 @media only screen and (min-width: 961px){
-    .square{width: 52px; /* 52 for desktop */
-            height: 52px;
+    .square{
+        width: 52px; /* 52 for desktop */
+        height: 52px;
     }
 }
