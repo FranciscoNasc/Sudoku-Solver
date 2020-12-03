@@ -32,6 +32,9 @@ input[type=number] {
     border-width: 1px;
     border-style: solid;
     border-color: black;
+
+    /* border-color: gray; */
+
     margin-right: -1px;
     margin-bottom: -1px;
 
@@ -47,11 +50,39 @@ input[type=number] {
 }
 
 .bottom{
-    margin-bottom: 0;
+    /* border-bottom: 1px; */
+     /* margin-bottom: 0px; */
+
+    border-bottom-width: 0.8vw;
+
+    border-bottom-color: black;
+    /* border-bottom-color: green; */
+}
+
+.top{
+
+    border-top-width: 0.8vw; 
+
+    border-top-color: black;
+    /* border-top-color: green; */
 }
 
 .right{
-    margin-right: 0;
+    /* border-right: 1px; */
+    /* margin-right: 0; */
+
+    border-right-width: 0.8vw;
+
+    border-right-color: black;
+}
+
+.left{
+    /* border-right: 1px; */
+    /* margin-right: 0; */
+
+    border-left-width: 0.8vw;
+
+    border-left-color: black;
 }
 
 .inserted{
@@ -68,10 +99,15 @@ input[type=number] {
     height: 40px;
 }
 
+.get-random-table{
+    width: 80px;
+    height: 40px;
+}
+
 .game{
     display: flex;
     justify-content: center;
-    /*height: 600px;*/
+    height: 600px;
     background: pink;
     align-items: center;
 }
@@ -90,8 +126,31 @@ input[type=number] {
 }
 
 @media only screen and (min-width: 961px){
+    *{
+        font-size: 15px;
+    }
     .square{
         width: 52px; /* 52 for desktop */
         height: 52px;
+        border-color: grey;   
+    }
+    .bottom{
+        border-bottom-width: 2.4px;    
+        border-bottom-color: black;
+    }
+    
+    .top{
+        border-top-width: 2.4px;
+        border-top-color: black;
+    }
+    
+    .right{
+        border-right-width: 2.4px;
+        border-right-color: black;
+    }
+    
+    .left{
+        border-left-width: 2.4px;    
+        border-left-color: black;
     }
 }

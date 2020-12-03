@@ -6,9 +6,6 @@ import Solver from './Solver.js';
 function SquarePredefined(props) {
     let cssClassesSelectors = "square predefined " + props.border;
     return (
-        /*<button className={cssClassesSelectors}>
-            {props.value}
-        </button>*/
         <input 
         type="button" 
         value={props.value} 
@@ -30,13 +27,34 @@ function Square(props) {
     )
 }
 
+function DelayInput(props) {
+    return (
+        <input 
+        type="number"
+        // type="text"
+        value={props.value}
+        className="delay-input"
+        onChange={e => props.onChange(e.target.value)}
+        />
+    )
+}
+
 class Board extends React.Component {
 
     constructor(props) {
         super(props);
+        this.resetBoard();
+    }
+
+    resetBoard(){
+
+        console.log("aaabbb");
         let slv = new Solver();
 
         let aux = slv.getRandomSetUp();
+
+        console.log(aux);
+
         let markaux = aux.map(x => x === 0 ? true: false);
         let colTemp =  slv.getCols(aux);
         let rowTemp = slv.getRows(aux);
@@ -51,7 +69,40 @@ class Board extends React.Component {
             steps: [],
             index:0,
             interval: clearInterval,
+            delayTime: 100,
         }
+        console.log(this.state.board);
+    }
+
+    getNewBoard(){
+        let slv = new Solver();
+        let aux = slv.getRandomSetUp();
+        let markaux = aux.map(x => x === 0 ? true: false);
+        let colTemp =  slv.getCols(aux);
+        let rowTemp = slv.getRows(aux);
+        let gridTemp = slv.getGrid(aux);
+
+        this.setState({
+            solver: new Solver(),
+            board:aux.map( x => x === 0? "": x),
+            mark: markaux,
+            col: colTemp,
+            row: rowTemp,
+            grid: gridTemp,
+            steps: [],
+            index:0,
+        })
+    }
+
+    setDelay(time){
+        this.setState({delayTime: time});
+    }
+
+    handleDelayChange = (delay) => {
+        console.log(delay);
+        if(delay === "")
+            delay = 0
+        this.setState({delayTime: delay});
     }
 
     set(rw, cl, i ){
@@ -90,7 +141,6 @@ class Board extends React.Component {
         }
     }
 
-
     solve(rw, cl){
         
         if(rw === 9 && cl === 0){
@@ -121,7 +171,6 @@ class Board extends React.Component {
         let ind = this.state.index;
         if(ind == this.state.steps.length){
             clearInterval(this.state.interval);
-            //this.setState({steps: [], index: 0});
             return;
         }
 
@@ -133,7 +182,7 @@ class Board extends React.Component {
 
     solveY(){
         console.log("abcde");
-        if(this.solve(0, 0));
+        if(this.solve(0, 0)); // handle the failure scenarios
             console.log("foi");
         let boardtemp = this.state.board;
         for(let i = 0; i < 81; i++){
@@ -141,12 +190,10 @@ class Board extends React.Component {
                 boardtemp[i] = "";
         }
         this.setState({board: boardtemp});
-
-        let ind = this.state.index;
-        ind = 0;
-        this.setState({index: ind});
-
-        this.state.interval = setInterval( () => {this.sv()}, 100);
+        this.setState({index: 0});
+        console.log(this.state.delayTime);
+        clearInterval(this.state.interval);
+        this.state.interval = setInterval( () => {this.sv()}, this.state.delayTime);
 
         console.log("consegui");
     }   
@@ -155,10 +202,14 @@ class Board extends React.Component {
         let str = "";
         if((n >= 19 && n <= 27) || (n >=46 && n <=54))
             str += " bottom ";
-
+        if((n >= 28 && n <= 36) || (n >=55 && n <=63))
+            str += " top ";
         for(let i = 0; i < 9; i++)
             if(n === 3 + 9*i || n === 6 + 9*i)
                 str += " right ";
+        for(let i = 0; i < 9; i++)
+            if(n === 4 + 9*i || n === 7 + 9*i)
+                str += " left ";
         return str;
     }
 
@@ -195,7 +246,7 @@ class Board extends React.Component {
         return <SquarePredefined value = {i} border = {this.borders(n + 1)}  />;
     }
     
-    render(){
+    displayBoard(){
         let row = [];
         let cell = [];
         
@@ -206,10 +257,21 @@ class Board extends React.Component {
             cell = [];
           }
         }
-  
-        //
+        console.log("aaaaaaaaaaaa");
+        return row;
+    }
 
-        return <div  className="board">{row}<button className="solveButton" onClick={() => this.solveY()}></button></div>
+    render(){
+        // this.setState({currentBoard: this.displayBoard});
+
+        return (
+        <div className="board">
+            {this.displayBoard()}
+            <button className="solveButton" onClick={() => this.solveY()}></button>
+            <DelayInput value={this.state.delayTime} onChange={(a) => this.handleDelayChange(a)}></DelayInput>
+            <button className="btn get-random-table" onClick={() => this.getNewBoard()}></button>
+        </div>
+        )
     }
 }
 
