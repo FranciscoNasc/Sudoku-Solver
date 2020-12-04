@@ -31,7 +31,6 @@ function DelayInput(props) {
     return (
         <input 
         type="number"
-        // type="text"
         value={props.value}
         className="delay-input"
         onChange={e => props.onChange(e.target.value)}
@@ -70,13 +69,18 @@ class Board extends React.Component {
             index:0,
             interval: clearInterval,
             delayTime: 100,
+            isCustom: false,
         }
         console.log(this.state.board);
     }
 
-    getNewBoard(){
-        let slv = new Solver();
-        let aux = slv.getRandomSetUp();
+    getNewBoard(custom){
+        let slv = new Solver(), aux = [];
+        if(!custom)
+            aux = slv.getRandomSetUp();
+        else    
+            aux = Array(81).fill(0);
+        
         let markaux = aux.map(x => x === 0 ? true: false);
         let colTemp =  slv.getCols(aux);
         let rowTemp = slv.getRows(aux);
@@ -91,6 +95,7 @@ class Board extends React.Component {
             grid: gridTemp,
             steps: [],
             index:0,
+            isCustom: custom,
         })
     }
 
@@ -115,7 +120,11 @@ class Board extends React.Component {
         rowtemp[rw][i] = true;
         coltemp[cl][i] = true;
         let stepsAux = this.state.steps;
-        stepsAux.push({"row":rw, "col": cl, "value": i});
+        if(this.state.steps.length < 100000){
+            stepsAux.push({"row":rw, "col": cl, "value": i});
+        }else{
+            console.log("resposta grande demais");
+        }
         this.setState({grid: gridtemp, row: rowtemp, col: coltemp, board: boardtemp, steps: stepsAux});
     }
 
@@ -133,15 +142,20 @@ class Board extends React.Component {
         this.setState({grid: gridtemp, row: rowtemp, col: coltemp, board: boardtemp, steps: stepsAux});
     }
 
+    isEmpty(rw, cl, i){
+        return (!this.state.row[rw][i] && !this.state.col[cl][i] && !this.state.grid[this.state.solver.belongsTo(rw * 9 + cl)][i]);
+    }
+
     solveRecursion(rw, cl){
-        if((cl + 1) % 9 === 0){
+        if((cl + 1) % 9 === 0)
             return this.solve(rw + 1, (cl + 1)%9);
-        }else{
-            return this.solve(rw, (cl + 1)%9);
-        }
+    
+        return this.solve(rw, (cl + 1)%9);
     }
 
     solve(rw, cl){
+
+        // console.log("chamando " + rw + " "+ cl)
         
         if(rw === 9 && cl === 0){
             return true;
@@ -155,7 +169,7 @@ class Board extends React.Component {
         }
 
         for(let i = 1; i <= 9; i++){
-            if(!this.state.row[rw][i] && !this.state.col[cl][i] && !this.state.grid[this.state.solver.belongsTo(rw * 9 + cl)][i]){
+            if(this.isEmpty(rw, cl, i)){
                 this.set(rw, cl, i);
 
                 if(this.solveRecursion(rw, cl))
@@ -181,21 +195,18 @@ class Board extends React.Component {
     }
 
     solveY(){
-        console.log("abcde");
-        if(this.solve(0, 0)); // handle the failure scenarios
+        if(this.solve(0, 0)) // handle the failure scenarios
             console.log("foi");
+        else    
+            console.log("n foi");
         let boardtemp = this.state.board;
         for(let i = 0; i < 81; i++){
             if(this.state.mark[i])
                 boardtemp[i] = "";
         }
-        this.setState({board: boardtemp});
-        this.setState({index: 0});
-        console.log(this.state.delayTime);
+        this.setState({board: boardtemp,index: 0});
         clearInterval(this.state.interval);
         this.state.interval = setInterval( () => {this.sv()}, this.state.delayTime);
-
-        console.log("consegui");
     }   
 
     borders(n){
@@ -213,7 +224,36 @@ class Board extends React.Component {
         return str;
     }
 
+    isValid(i, n){
+        return (!this.state.row[Math.floor(i/9)][n] && !this.state.col[i%9][n] && !this.state.grid[this.state.solver.belongsTo(i)][n]);
+    }
+
     handleChange = (i , e) => {
+
+        console.log(e);
+
+
+        if(this.state.isCustom ){
+            // if(!this.state.row[Math.floor(i/9)][i] && !this.state.col[cl][i] && !this.state.grid[this.state.solver.belongsTo(rw * 9 + cl)][i]);
+            let boardAux = this.state.board;
+            e %=10;
+            if(this.isValid(i, e)){
+                let markAux = this.state.mark;
+                boardAux[i] = e%10;
+                markAux[i] = boardAux[i] === "" ? true: false;
+
+                this.setState({board: boardAux, mark: markAux,
+                    row: this.state.solver.getRows(boardAux),
+                    col: this.state.solver.getCols(boardAux),
+                    grid: this.state.solver.getGrid(boardAux)
+                });
+                return ;
+            }else{
+                boardAux[i] = "";
+                this.setState({board: boardAux});
+                console.log(e)
+            }
+        }           
 
         if(isNaN(e)){
             var boardAux = this.state.board;
@@ -257,19 +297,21 @@ class Board extends React.Component {
             cell = [];
           }
         }
-        console.log("aaaaaaaaaaaa");
         return row;
     }
 
-    render(){
-        // this.setState({currentBoard: this.displayBoard});
+    customBoard(){
+        this.getNewBoard(true);
+    }
 
+    render(){
         return (
         <div className="board">
             {this.displayBoard()}
-            <button className="solveButton" onClick={() => this.solveY()}></button>
+            <button className="btn solve-button" onClick={() => this.solveY()}></button>
             <DelayInput value={this.state.delayTime} onChange={(a) => this.handleDelayChange(a)}></DelayInput>
-            <button className="btn get-random-table" onClick={() => this.getNewBoard()}></button>
+            <button className="btn get-random-table" onClick={() => this.getNewBoard(false)}></button>
+            <button className="btn set-board" onClick={() => this.customBoard()} >Organizar tabuleiro</button>
         </div>
         )
     }

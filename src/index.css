@@ -40,6 +40,8 @@ input[type=number] {
 
     width:11.1vw;
     height: 11.1vw;
+    /* font-size: 4vh; */
+
 
     text-align: center;
 }
@@ -50,13 +52,8 @@ input[type=number] {
 }
 
 .bottom{
-    /* border-bottom: 1px; */
-     /* margin-bottom: 0px; */
-
     border-bottom-width: 0.8vw;
-
     border-bottom-color: black;
-    /* border-bottom-color: green; */
 }
 
 .top{
@@ -68,38 +65,16 @@ input[type=number] {
 }
 
 .right{
-    /* border-right: 1px; */
-    /* margin-right: 0; */
-
     border-right-width: 0.8vw;
-
     border-right-color: black;
 }
 
 .left{
-    /* border-right: 1px; */
-    /* margin-right: 0; */
-
     border-left-width: 0.8vw;
-
     border-left-color: black;
 }
 
-.inserted{
-    border-color: #00ff00;
-    background: red;
-}
-
-.removed{
-    border-color: #ff3333;
-}
-
-.solveButton{
-    width: 80px;
-    height: 40px;
-}
-
-.get-random-table{
+.btn{
     width: 80px;
     height: 40px;
 }
@@ -107,7 +82,7 @@ input[type=number] {
 .game{
     display: flex;
     justify-content: center;
-    height: 600px;
+    height: 100vh;
     background: pink;
     align-items: center;
 }
@@ -133,6 +108,7 @@ input[type=number] {
         width: 52px; /* 52 for desktop */
         height: 52px;
         border-color: grey;   
+        /* font-size: 16px; */
     }
     .bottom{
         border-bottom-width: 2.4px;    

@@ -27,6 +27,7 @@ export default class Solver{
             var aux = Array(10).fill(false);
             for(let j = 0; j < 9; j++){
                 let n = setp[i + j*9]; // maybe delete this "-1"
+                // let n = 0;
                 if(n !== "" && n !== 0){
                     aux[n]= true;
                 }else{
@@ -35,6 +36,7 @@ export default class Solver{
             }
             ans.push(aux);
         }
+        console.log("abui");
         console.log(ans);   
         return ans;
     }
@@ -45,7 +47,7 @@ export default class Solver{
         for(let i = 0; i < 9; i++){
             var aux = Array(10).fill(false);
             for(let j = 0; j < 9; j++){
-                let n = setp[i*9 + j]; // maybe delete this "-1"
+                let n = setp[i*9 + j];
                 if(n !== "" && n !== 0){
                     aux[n]= true;
                 }else{
