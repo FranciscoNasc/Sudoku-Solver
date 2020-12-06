@@ -37,7 +37,7 @@ function DelayInput(props) {
             onChange={e => props.onChange(e.target.value)}
             />
             <span className="exp">
-                Velocidade da execução em ms
+                Intervalo entre ações em ms
             </span>
         </div>
     )
@@ -159,8 +159,6 @@ class Board extends React.Component {
     }
 
     solve(rw, cl){
-
-        // console.log("chamando " + rw + " "+ cl)
         
         if(rw === 9 && cl === 0){
             return true;
@@ -237,8 +235,9 @@ class Board extends React.Component {
 
         console.log(e);
 
+        let inpt = e%10;
 
-        if(this.state.isCustom ){
+        if(this.state.isCustom &&  inpt >= 1 && inpt <= 9 && Number.isInteger(inpt)){
             // if(!this.state.row[Math.floor(i/9)][i] && !this.state.col[cl][i] && !this.state.grid[this.state.solver.belongsTo(rw * 9 + cl)][i]);
             let boardAux = this.state.board;
             e %=10;
@@ -268,7 +267,6 @@ class Board extends React.Component {
             this.setState({board: boardAux});
 
         }
-        let inpt = e%10;
         if(inpt >= 1 && inpt <= 9 && Number.isInteger(inpt)){
             var boardAux = this.state.board;
             boardAux[i] = e%10;
@@ -329,7 +327,6 @@ class Board extends React.Component {
 
 
 ReactDOM.render(
-    // <div className="game"><Board/></div>,
     <Board/>,
     document.getElementById('root')
 );
