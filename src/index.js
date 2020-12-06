@@ -19,7 +19,7 @@ function Square(props) {
     let cssClassesSelectors = "square " + props.border;// + props.color;
     return (
         <input 
-        type="text"
+        type="number"
         value={props.value} 
         className={cssClassesSelectors}
         onChange={e => props.onChange(props.index, e.target.value)}
@@ -29,12 +29,17 @@ function Square(props) {
 
 function DelayInput(props) {
     return (
-        <input 
-        type="number"
-        value={props.value}
-        className="delay-input"
-        onChange={e => props.onChange(e.target.value)}
-        />
+        <div className="speed">
+            <input 
+            type="number"
+            value={props.value}
+            className="delay-input"
+            onChange={e => props.onChange(e.target.value)}
+            />
+            <span className="exp">
+                Velocidade da execução em ms
+            </span>
+        </div>
     )
 }
 
@@ -306,12 +311,17 @@ class Board extends React.Component {
 
     render(){
         return (
-        <div className="board">
-            {this.displayBoard()}
-            <button className="btn solve-button" onClick={() => this.solveY()}></button>
-            <DelayInput value={this.state.delayTime} onChange={(a) => this.handleDelayChange(a)}></DelayInput>
-            <button className="btn get-random-table" onClick={() => this.getNewBoard(false)}></button>
-            <button className="btn set-board" onClick={() => this.customBoard()} >Organizar tabuleiro</button>
+        <div className="game">
+            <div className="board">
+                {this.displayBoard()}
+                <div className="form-div">
+                    <button className="btn get-random-table" onClick={() => this.getNewBoard(false)}>Tabuleiro aleatório</button>
+                    <button className="btn custom-board" onClick={() => this.customBoard()} >Tabuleiro personalizado</button>
+                    <DelayInput value={this.state.delayTime} className="delay-input" onChange={(a) => this.handleDelayChange(a)}></DelayInput>
+                <button className="btn solve-button" onClick={() => this.solveY()}>Gerar solução</button>
+            </div>
+            </div>
+
         </div>
         )
     }
@@ -319,6 +329,7 @@ class Board extends React.Component {
 
 
 ReactDOM.render(
-    <div className="game"><Board/></div>,
+    // <div className="game"><Board/></div>,
+    <Board/>,
     document.getElementById('root')
 );
