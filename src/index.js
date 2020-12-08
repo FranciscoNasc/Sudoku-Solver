@@ -36,14 +36,14 @@ function DelayInput(props) {
             className="delay-input"
             onChange={e => props.onChange(e.target.value)}
             />
-            <span className="exp">
+            <span className="description">
                 Intervalo entre ações em ms
             </span>
         </div>
     )
 }
 
-class Board extends React.Component {
+class SudokuSolver extends React.Component {
 
     constructor(props) {
         super(props);
@@ -186,7 +186,7 @@ class Board extends React.Component {
 
     sv(){
         let ind = this.state.index;
-        if(ind == this.state.steps.length){
+        if(ind === this.state.steps.length){
             clearInterval(this.state.interval);
             return;
         }
@@ -199,7 +199,7 @@ class Board extends React.Component {
 
     solveY(){
         if(this.solve(0, 0)) // handle the failure scenarios
-            console.log("foi");
+            console.log(this.state.steps.length);
         else    
             console.log("n foi");
         let boardtemp = this.state.board;
@@ -316,8 +316,8 @@ class Board extends React.Component {
                     <button className="btn get-random-table" onClick={() => this.getNewBoard(false)}>Tabuleiro aleatório</button>
                     <button className="btn custom-board" onClick={() => this.customBoard()} >Tabuleiro personalizado</button>
                     <DelayInput value={this.state.delayTime} className="delay-input" onChange={(a) => this.handleDelayChange(a)}></DelayInput>
-                <button className="btn solve-button" onClick={() => this.solveY()}>Gerar solução</button>
-            </div>
+                    <button className="btn solve-button" onClick={() => this.solveY()}>Gerar solução</button>
+                </div>
             </div>
 
         </div>
@@ -327,6 +327,6 @@ class Board extends React.Component {
 
 
 ReactDOM.render(
-    <Board/>,
+    <SudokuSolver/>,
     document.getElementById('root')
 );

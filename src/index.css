@@ -15,6 +15,7 @@
     justify-content: center;
     width: 100%;
     flex-wrap: wrap;
+
 }
 
 input::-webkit-outer-spin-button,
@@ -79,7 +80,6 @@ input[type=number] {
 
 .btn{
     cursor: pointer;
-
     background: white;
     border: 2px solid #555555;
     width: 50%;
@@ -99,20 +99,11 @@ input[type=number] {
     align-items: center;
 }
 
-.exp{
+.description{
     font-weight: 900;
     color: white;
     margin-left: 3vw; 
 }
-
-
-/* .get-random-table{
-    margin-right: 1%;
-}
-
-.custom-board{
-    margin-left: 1%;
-} */
 
 .solve-button{
     width: 100%;
@@ -140,11 +131,43 @@ input[type=number] {
 }
 
 
+
 @media only screen and (min-width: 431px) and (max-width: 960px){
     *{
         font-size: 4vw;
     }  
 }
+
+@media only screen and (max-width: 960px){
+
+    @media (orientation: landscape){
+        .game{
+            height: 100%;
+            align-items: flex-start;
+            padding-top: 1vh;;
+        }
+
+        .square{
+            -webkit-appearance: none;
+            border-width: 1px;
+            border-style: solid;
+            border-color: black;
+        
+            margin-right: -1px;
+            margin-bottom: -1px;
+        
+            width:11.1vh;
+            height: 11.1vh;
+        
+            text-align: center;
+        }
+        .btn{
+            height: 6vw;
+        }
+    }
+}
+
+
 
 @media only screen and (min-width: 961px){
     *{
