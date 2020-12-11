@@ -45,7 +45,8 @@ input[type=number] {
 
 .predefined{
     pointer-events: none; 
-    background: lightgrey;
+    background: #ccc;
+    background: #e6e6ff;
 }
 
 .bottom{
@@ -82,12 +83,23 @@ input[type=number] {
     cursor: pointer;
     background: white;
     border: 2px solid #555555;
+    border: 2px solid  #ccc;;
+
+    /* background-image: linear-gradient(180deg,blueviolet,pink); */
+
+
     width: 50%;
     height: 6vh;
 }
 
 .btn:hover{
     background-color: #555555;
+
+    background: blueviolet;
+
+    background: #ccc;
+    /* background-image: linear-gradient(180deg,blueviolet,pink); */
+
     color: white;
 }
 
@@ -119,6 +131,7 @@ input[type=number] {
 
 .delay-input:focus {
     border: 3px solid #555;
+    border: 3px solid blueviolet;
   }
 
 .game{
@@ -127,6 +140,10 @@ input[type=number] {
     justify-content: center;
     height: 100vh;
     background: grey;   
+
+    background-image: linear-gradient(180deg,blueviolet, #8080ff);
+
+    
     align-items: center;
 }
 

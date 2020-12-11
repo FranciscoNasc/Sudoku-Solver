@@ -314,7 +314,7 @@ class SudokuSolver extends React.Component {
                 {this.displayBoard()}
                 <div className="form-div">
                     <button className="btn get-random-table" onClick={() => this.getNewBoard(false)}>Tabuleiro aleatório</button>
-                    <button className="btn custom-board" onClick={() => this.customBoard()} >Tabuleiro personalizado</button>
+                    <button className="btn custom-board" onClick={() => this.customBoard()} >Crie seu tabuleiro</button>
                     <DelayInput value={this.state.delayTime} className="delay-input" onChange={(a) => this.handleDelayChange(a)}></DelayInput>
                     <button className="btn solve-button" onClick={() => this.solveY()}>Gerar solução</button>
                 </div>
